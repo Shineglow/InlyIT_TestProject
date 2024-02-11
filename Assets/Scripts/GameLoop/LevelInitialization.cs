@@ -13,6 +13,29 @@ public class LevelInitialization : MonoBehaviour
 
         var canvasLayers = GameRoot.CanvasLayers;
 
+        var o = new GameObject().AddComponent<RealizationOfCiclicList>();
+        o.transform.SetParent(canvasLayers.Layer1);
+        o.SetPrefub(ResourcesManager.CreatePrefabInstance<CharacterInfoCard, EViews>(EViews.CharacterView, canvasLayers.Layer1));
+        
+        foreach (ECharacters eCharacter in Enum.GetValues(typeof(ECharacters)))
+        {
+            var characterProps = charConf.GetConfiguration(eCharacter);
+
+            var newCharacter = new GameObject().AddComponent<Character>();
+            newCharacter.SetCharacter(characterProps);
+            newCharacter.gameObject.SetActive(false);
+            
+            characters.Add(newCharacter);
+        }
+
+        var characterCopy = new List<Character>(characters);
+        o.LoadData((card, character) =>
+        {
+            card.SetCharacterInfo(character);
+        }, characterCopy);
+        
+        
+
         // foreach (ECharacters eCharacter in Enum.GetValues(typeof(ECharacters)))
         // {
         //     var characterProps = charConf.GetConfiguration(eCharacter);
